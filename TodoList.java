@@ -1,10 +1,10 @@
-public class TodoList {
+public class Trello {
                     //Fiz em forma de lista simplesmente encadeada.
     private Tarefa cabeca;
     private Tarefa cauda;
     private int tamanho;
 
-    public TodoList() {
+    public Trello() {
         this.cabeca = null;
         this.cauda = null;
         this.tamanho = 0;
@@ -78,11 +78,24 @@ public class TodoList {
         atual.setDescricao(descricao);
     }
 
-    public void remove(int posicao) {
+    public void moverTarefa(Trello destino, int posicao) {
+        String tarefaRemovida = this.remove(posicao);
+        destino.inserirNoFim(tarefaRemovida);
+    }
+
+    public void casoListaVazio(){
+        if (estaVazio()) {
+            System.out.print("lista vazia");
+        }
+    }
+
+    public String remove(int posicao) {
+        String elemento;
         if (posicao < 0 || posicao >= tamanho) {
             throw new IndexOutOfBoundsException("Posição inválida");
         }
         if (posicao == 0) {
+            elemento = cabeca.getDescricao();
             cabeca = cabeca.getProximo();
             if (cabeca == null) cauda = null;
         } else {
@@ -90,10 +103,12 @@ public class TodoList {
             for (int i = 0; i < posicao - 1; i++) {
                 atual = atual.getProximo();
             }
+            elemento = atual.getDescricao();
             atual.setProximo(atual.getProximo().getProximo());
             if (atual.getProximo() == null) cauda = atual;
         }
         tamanho--;
+        return elemento;
     }
 
     public int tamanho() {
@@ -103,6 +118,7 @@ public class TodoList {
     public void imprimirLista() {
         Tarefa atual = cabeca;
         int temp = 1;
+        casoListaVazio();
         while (atual != null) {
             System.out.print("Tarefa "+ temp+ ": "+ atual.getDescricao()+ " | ");
             atual = atual.getProximo();
